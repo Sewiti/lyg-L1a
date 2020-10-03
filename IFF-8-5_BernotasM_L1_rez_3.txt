@@ -1,0 +1,40 @@
+Initial data:
+Name                          | Age | Salary   
+------------------------------+-----+----------
+Chad Harris                   |  16 |  1503.30
+John Campbell                 |  15 |  4744.78
+Ashley Nielsen                |   3 |  1043.72
+Colleen Brady                 |   3 |  2365.01
+Brenda Chan                   |  10 |  1776.68
+Kathryn Jones                 |  11 |  4433.21
+Isaiah Moore                  |  14 |  4139.16
+Jessica Proctor               |  13 |  4981.05
+Jesus Lewis                   |  16 |  1533.74
+Michael Russell               |  12 |   844.71
+Amy Ruiz                      |   7 |  2676.86
+Allen Lee                     |   4 |  3253.82
+Richard Nichols               |   8 |  3087.94
+Tonya Quinn                   |  12 |   219.82
+Eric Lowery                   |   5 |  3390.13
+Michelle Jones                |  16 |  1990.74
+Connie Hoffman                |   3 |   121.02
+Morgan Haney                  |  17 |  4968.68
+Anthony Johnson               |   7 |   358.27
+George Bates                  |  13 |  2370.65
+Joshua Wells                  |   8 |   436.28
+John Yang                     |   5 |   191.43
+Julie Rowe                    |   5 |  2682.65
+George Deleon                 |  10 |   478.00
+Megan Saunders                |  10 |  3276.13
+Anna Long                     |  11 |   224.67
+Mark Tate                     |  11 |  2934.50
+Jeffrey Martinez              |   8 |  2634.51
+Patricia Reeves               |  11 |  4433.26
+Beth Massey                   |  13 |  4906.94
+Mary Castro                   |  12 |   136.03
+Crystal Larson                |   9 |  3651.63
+
+Results:
+Name                          | Age | Salary   | Hash
+------------------------------+-----+----------+------------------------------------------------------------------------------------------
+-                             |   - |    --.-- | -

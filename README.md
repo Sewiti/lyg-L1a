@@ -1,1 +1,1 @@
-# lyg-L1a
+# Lygiagretusis programavimas L1a
