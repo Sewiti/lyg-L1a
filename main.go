@@ -73,12 +73,13 @@ func putIntoMonitor(dataMonitor *dataMonitor, items []data) {
 }
 
 func worker(dataMonitor *dataMonitor, resultMonitor *resultMonitor, waiter *sync.WaitGroup) {
+	defer waiter.Done()
+
 	for {
 		item, fin := dataMonitor.removeItem()
 
 		if fin {
 			// fmt.Println("Worker exited")
-			waiter.Done()
 			return
 		}
 
@@ -173,7 +174,7 @@ func (monitor *dataMonitor) removeItem() (data, bool) {
 
 	for monitor.size <= 0 {
 		if monitor.finished {
-			return data{}, monitor.finished
+			return data{}, true
 		}
 
 		monitor.cond.Wait()
