@@ -21,10 +21,14 @@ func main() {
 		dataMonitor := newDataMonitor(5)
 		resultMonitor := newResultMonitor()
 
-		waiter := sync.WaitGroup{}
-		waiter.Add(len(items))
+		// Workers count
+		n := len(items) / 4
+		// n := 6
 
-		for j := 0; j < 6; j++ {
+		waiter := sync.WaitGroup{}
+		waiter.Add(n)
+
+		for j := 0; j < n; j++ {
 			go worker(&dataMonitor, &resultMonitor, &waiter)
 		}
 
@@ -65,23 +69,24 @@ func putIntoMonitor(dataMonitor *dataMonitor, items []data) {
 	for _, v := range items {
 		dataMonitor.addItem(v)
 	}
+	dataMonitor.setFinished()
 }
 
 func worker(dataMonitor *dataMonitor, resultMonitor *resultMonitor, waiter *sync.WaitGroup) {
 	for {
-		item := dataMonitor.removeItem()
+		item, fin := dataMonitor.removeItem()
+
+		if fin {
+			// fmt.Println("Worker exited")
+			waiter.Done()
+			return
+		}
 
 		execute(resultMonitor, item)
-
-		waiter.Done()
 	}
 }
 
 func execute(resultMonitor *resultMonitor, item data) {
-	if item.Age < 18 {
-		return
-	}
-
 	bytes := []byte(fmt.Sprintf("%s:%d:%f", item.Name, item.Age, item.Salary))
 
 	hasher := sha512.New()
@@ -90,6 +95,7 @@ func execute(resultMonitor *resultMonitor, item data) {
 	}
 
 	item.Computed = base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+
 	resultMonitor.addItemSorted(item)
 }
 
@@ -130,6 +136,7 @@ type dataMonitor struct {
 	size      int
 	from      int
 	to        int
+	finished  bool
 	mutex     *sync.Mutex
 	cond      *sync.Cond
 }
@@ -141,6 +148,7 @@ func newDataMonitor(size int) dataMonitor {
 		container: make([]data, size),
 		mutex:     &mutex,
 		cond:      sync.NewCond(&mutex),
+		finished:  false,
 	}
 }
 
@@ -159,11 +167,15 @@ func (monitor *dataMonitor) addItem(item data) {
 	monitor.cond.Broadcast()
 }
 
-func (monitor *dataMonitor) removeItem() data {
+func (monitor *dataMonitor) removeItem() (data, bool) {
 	monitor.mutex.Lock()
 	defer monitor.mutex.Unlock()
 
 	for monitor.size <= 0 {
+		if monitor.finished {
+			return data{}, monitor.finished
+		}
+
 		monitor.cond.Wait()
 	}
 
@@ -174,7 +186,15 @@ func (monitor *dataMonitor) removeItem() data {
 
 	monitor.cond.Broadcast()
 
-	return item
+	return item, false
+}
+
+func (monitor *dataMonitor) setFinished() {
+	monitor.mutex.Lock()
+	defer monitor.mutex.Unlock()
+
+	monitor.finished = true
+	monitor.cond.Broadcast()
 }
 
 // Result Monitor
@@ -190,6 +210,10 @@ func newResultMonitor() resultMonitor {
 }
 
 func (monitor *resultMonitor) addItemSorted(item data) {
+	if item.Age < 18 {
+		return
+	}
+
 	monitor.mutex.Lock()
 	defer monitor.mutex.Unlock()
 
