@@ -13,8 +13,8 @@ import (
 func main() {
 	for i := 1; i <= 3; i++ {
 		fmt.Printf("Started %d\n", i)
-		dataFilename := fmt.Sprintf("IFF-8-5_BernotasM_L1_dat_%d.json", i)
-		resultsFilename := fmt.Sprintf("IFF-8-5_BernotasM_L1_rez_%d.txt", i)
+		dataFilename := fmt.Sprintf("IFF-8-5_BernotasM_L1a_dat_%d.json", i)
+		resultsFilename := fmt.Sprintf("IFF-8-5_BernotasM_L1a_rez_%d.txt", i)
 
 		items := readJSON(dataFilename)
 
